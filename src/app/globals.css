@@ -1,0 +1,238 @@
+@import "tailwindcss";
+
+@theme {
+  /* Neutral greys so photos are judged on colours that do not tint them.
+     Green and red are reserved for the two decisions. */
+  --color-canvas: #f4f4f2;
+  --color-surface: #ffffff;
+  --color-raised: #fafaf8;
+  --color-sunk: #e8e8e5;
+  --color-ink: #111111;
+  --color-muted: #5c5c58;
+  --color-faint: #9a9a95;
+  --color-rule: #e4e4e0;
+  --color-edge: #d0d0cb;
+  --color-keep: #12924f;
+  --color-keep-soft: #e1f3e8;
+  --color-reject: #dc3a2a;
+  --color-reject-soft: #fbe6e3;
+  --color-scrim: rgb(10 10 10 / 0.42);
+
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-instrument), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+:root {
+  color-scheme: light;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.06), 0 12px 32px -8px rgb(0 0 0 / 0.18);
+  --shadow-float: 0 2px 6px rgb(0 0 0 / 0.08), 0 24px 60px -12px rgb(0 0 0 / 0.28);
+}
+
+/* Dark is the same interface on near-black: only the tokens change. It
+   follows the system unless the reader picked light, and always applies when
+   they picked dark. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-canvas: #0b0b0c;
+    --color-surface: #151517;
+    --color-raised: #1c1c1f;
+    --color-sunk: #050506;
+    --color-ink: #f2f2ef;
+    --color-muted: #a3a39e;
+    --color-faint: #6b6b69;
+    --color-rule: #222225;
+    --color-edge: #333337;
+    --color-keep: #34d17c;
+    --color-keep-soft: #0e2a1b;
+    --color-reject: #ff5b48;
+    --color-reject-soft: #2e1310;
+    --color-scrim: rgb(0 0 0 / 0.6);
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.5), 0 16px 40px -10px rgb(0 0 0 / 0.7);
+    --shadow-float: 0 2px 6px rgb(0 0 0 / 0.5), 0 30px 70px -14px rgb(0 0 0 / 0.85);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-canvas: #0b0b0c;
+  --color-surface: #151517;
+  --color-raised: #1c1c1f;
+  --color-sunk: #050506;
+  --color-ink: #f2f2ef;
+  --color-muted: #a3a39e;
+  --color-faint: #6b6b69;
+  --color-rule: #222225;
+  --color-edge: #333337;
+  --color-keep: #34d17c;
+  --color-keep-soft: #0e2a1b;
+  --color-reject: #ff5b48;
+  --color-reject-soft: #2e1310;
+  --color-scrim: rgb(0 0 0 / 0.6);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.5), 0 16px 40px -10px rgb(0 0 0 / 0.7);
+  --shadow-float: 0 2px 6px rgb(0 0 0 / 0.5), 0 30px 70px -14px rgb(0 0 0 / 0.85);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  background-color: var(--color-canvas);
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis-weight: none;
+}
+
+::selection {
+  background: var(--color-ink);
+  color: var(--color-canvas);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* The active segments of the theme and language switches come from the
+   attributes the inline scripts set, so they are right on the first paint. */
+:root:not([data-theme]) .theme-switch [data-mode="system"],
+:root[data-theme="light"] .theme-switch [data-mode="light"],
+:root[data-theme="dark"] .theme-switch [data-mode="dark"],
+:root:not([lang="en"]) .lang-switch [data-locale="fr"],
+:root[lang="en"] .lang-switch [data-locale="en"] {
+  background: var(--color-ink);
+  color: var(--color-canvas);
+}
+
+/* Set by the inline script while a stored language other than French is
+   applied, so the French text never flashes. */
+:root[data-lang-pending] body {
+  visibility: hidden;
+}
+
+.nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-variation-settings: "wdth" 88, "opsz" 96;
+  letter-spacing: -0.035em;
+  line-height: 0.96;
+}
+
+.kbd {
+  display: inline-flex;
+  min-width: 1.6em;
+  height: 1.6em;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.4em;
+  border: 1px solid var(--color-edge);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--color-surface);
+  font-family: var(--font-mono);
+  font-size: 0.78em;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-ink);
+}
+
+/* Hairline checkbox and select, no browser chrome. */
+.check {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border: 1.5px solid var(--color-edge);
+  border-radius: 4px;
+  background: var(--color-surface);
+  display: grid;
+  place-content: center;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+.check::after {
+  content: "";
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid var(--color-canvas);
+  border-bottom: 2px solid var(--color-canvas);
+  transform: translateY(-1px) rotate(-45deg) scale(0);
+  transition: transform 220ms var(--ease-spring);
+}
+.check:checked {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+}
+.check:checked::after {
+  transform: translateY(-1px) rotate(-45deg) scale(1);
+}
+
+/* Thin, neutral scrollbars. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-edge) transparent;
+}
+
+/* Film grain over the sorting screen's ambient light, so the blur never
+   bands on 8-bit screens. */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.18;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes appear {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Shown only when a photo takes more than a quarter second to arrive. */
+.spinner {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--color-edge);
+  border-top-color: var(--color-ink);
+  opacity: 0;
+  animation:
+    spin 0.8s linear infinite,
+    appear 0.2s 0.25s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
