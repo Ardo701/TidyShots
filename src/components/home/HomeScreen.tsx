@@ -3,13 +3,13 @@
 import { FolderOpen, MonitorSmartphone, ShieldCheck } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { APP_NAME } from "@/lib/brand";
+import { APP_NAME, REPO_URL } from "@/lib/brand";
 import { isFileSystemAccessSupported } from "@/lib/fs";
 import type { Localized } from "@/lib/i18n";
 import type { StoredSession } from "@/lib/persist";
 import { useLocale } from "../LocaleProvider";
 import { LanguageToggle, ThemeToggle } from "../Switches";
-import { Button, Kbd, Logo, spring } from "../ui";
+import { Button, GitHubMark, Kbd, Logo, spring } from "../ui";
 import HeroDeck from "./HeroDeck";
 import RecentSessions from "./RecentSessions";
 
@@ -159,6 +159,16 @@ export default function HomeScreen({ onOpen, onResume, notify }: Props) {
         <div className="flex items-center gap-2">
           <LanguageToggle />
           <ThemeToggle />
+          <a
+            href={REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={t({ fr: "Code source sur GitHub", en: "Source code on GitHub" })}
+            title={t({ fr: "Code source sur GitHub", en: "Source code on GitHub" })}
+            className="flex size-[30px] items-center justify-center rounded-[7px] border border-edge bg-surface text-muted transition-colors duration-200 hover:text-ink"
+          >
+            <GitHubMark className="size-[15px]" />
+          </a>
         </div>
       </header>
 
